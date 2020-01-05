@@ -55,7 +55,7 @@ provider:
 functions:
 
   Auth:
-    handler: src/lambda/index.auth0authorizer
+    handler: src/lambda/index.auth0Authorizer
 
   # TODO: Configure this function
   GetTodos:
