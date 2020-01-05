@@ -22,8 +22,8 @@ plugins:
   - serverless-reqvalidator-plugin
   - serverless-aws-documentation
 
-package:
-  individually: true
+#package:
+#  individually: true
 
 provider:
   name: aws
@@ -33,9 +33,9 @@ provider:
   region: ${opt:region, 'us-east-1'}
   
   environment:
-    IMAGES_S3_BUCKET: ImagesAttachment-kemsty-${self:provider.stage}
-    TODOS_TABLE: TodosTable-${self:provider.stage}
-    INDEX_NAME: TodosTableIndex-${self:provider.stage}
+    IMAGES_S3_BUCKET: imagesattachment-kemsty-${self:provider.stage}
+    TODOS_TABLE: TodosTable-kemsty-${self:provider.stage}
+    INDEX_NAME: TodosTableIndex-kemsty-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 36000
 
   iamRoleStatements:
