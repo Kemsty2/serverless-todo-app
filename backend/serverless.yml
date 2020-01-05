@@ -55,7 +55,7 @@ provider:
 functions:
 
   Auth:
-    handler: src/lambda/index.auth0Authorizer
+    handler: src/lambda/index.auth0authorizerr
 
   # TODO: Configure this function
   GetTodos:
@@ -63,9 +63,9 @@ functions:
     events:
       - http:
           method: get
-          path: todos
-          authorize: Auth
+          path: todos          
           cors: true
+          authorizer: Auth
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -80,7 +80,7 @@ functions:
           method: post
           path: todos
           cors: true
-          authorize: Auth
+          authorizerr: Auth
           reqValidatorName: RequestBodyValidator
           documentation:
             summary: Create a new todo item
@@ -101,7 +101,7 @@ functions:
           method: patch
           path: todos/{todoId}
           cors: true
-          authorize: Auth
+          authorizer: Auth
           reqValidatorName: RequestBodyValidator
           documentation:
             summary: Update a todo of the current user
@@ -121,7 +121,7 @@ functions:
       - http:
           method: delete
           path: todos/{todoId}
-          authorize: Auth
+          authorizer: Auth
           cors: true
     iamRoleStatements:
       - Effect: Allow
@@ -136,7 +136,7 @@ functions:
       - http:
           method: post
           path: todos/{todoId}/attachment
-          authorize: Auth
+          authorizer: Auth
           cors: true
 
 resources:
