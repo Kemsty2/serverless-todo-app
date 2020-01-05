@@ -1,6 +1,6 @@
 language: generic
 env:
-- MAX_OLD_SPACE_SIZE=1024
+- MAX_OLD_SPACE_SIZE=4096
 
 before_install:
 - npm i serverless -g
