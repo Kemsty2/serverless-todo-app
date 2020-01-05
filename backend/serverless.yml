@@ -59,12 +59,12 @@ functions:
 
   # TODO: Configure this function
   GetTodos:
-    handler: src/lambda/index.getTodos
-    authorize: Auth
+    handler: src/lambda/index.getTodos    
     events:
       - http:
           method: get
           path: todos
+          authorize: Auth
     iamRoleStatements:
       - Effect: Allow
         Action:
