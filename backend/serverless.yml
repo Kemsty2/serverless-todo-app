@@ -22,8 +22,8 @@ plugins:
   - serverless-reqvalidator-plugin
   - serverless-aws-documentation
 
-package:
-  individually: true
+#package:
+#  individually: true
 
 provider:
   name: aws
@@ -55,7 +55,7 @@ provider:
 functions:
 
   Auth:
-    handler: src/lambda/index.auth0authorizerr
+    handler: src/lambda/index.auth0authorizer
 
   # TODO: Configure this function
   GetTodos:
