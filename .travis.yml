@@ -3,7 +3,7 @@ env:
 - MAX_OLD_SPACE_SIZE=1024
 
 before_install:
-- curl -o- -L https://slss.io/install | bash
+- npm i serverless -g
 - serverless config credentials --provider aws --key ${AWS_ACCESS_KEY_ID} --secret ${AWS_SECRET_KEY}
 
 stages:
