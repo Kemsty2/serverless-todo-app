@@ -1,8 +1,7 @@
-import * as AWS  from 'aws-sdk'
-//  import * as AWSXRay from 'aws-xray-sdk'
+import {captureAWS} from 'aws-xray-sdk'
 import { DocumentClient } from 'aws-sdk/clients/dynamodb'
 
-//  const XAWS = AWSXRay.captureAWS(AWS)
+const XAWS = captureAWS(require('aws-sdk'))
 
 import { TodoItem } from '../models/TodoItem'
 import { TodoUpdate } from '../models/TodoUpdate'
@@ -43,7 +42,21 @@ export class TodosAccess {
     return todoItem
   }
 
-  async updateTodo(todoToUpdate: TodoUpdate, userId: string, todoId: string): Promise<void> {
+  async getTodoById(userId:string, todoId: string):  Promise<TodoItem>{
+
+    const key = {
+      "userId": userId,
+      "todoId": todoId
+    }
+    const result = await this.docClient.get({
+      TableName: this.todosTable,
+      Key: key
+    }).promise()
+
+    return result.Item as TodoItem
+  }
+
+  async updateTodo(todoToUpdate: TodoUpdate, userId: string, todoId: string): Promise<void> {    
 
     const params = {
       TableName: this.todosTable,
@@ -77,11 +90,10 @@ export class TodosAccess {
     await this.docClient.delete({
       TableName: this.todosTable,
       Key: key
-    }).promise()
-    
+    }).promise()    
   }
 }
 
-function createDynamoDBClient() { 
-    return new AWS.DynamoDB.DocumentClient()
+function createDynamoDBClient() {   
+    return new XAWS.DynamoDB.DocumentClient()
 }
