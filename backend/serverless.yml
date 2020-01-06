@@ -32,6 +32,10 @@ provider:
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'us-east-1'}
   
+  tracing:
+    lambda: true
+    apiGateway: true
+
   environment:
     IMAGES_S3_BUCKET: imagesattachment-kemsty-${self:provider.stage}
     TODOS_TABLE: TodosTable-kemsty-${self:provider.stage}
@@ -49,7 +53,19 @@ provider:
       Action:
         - s3:PutObject
         - s3:GetObject
-      Resource: arn:aws:s3:::${self:provider.environment.IMAGES_S3_BUCKET}/*        
+      Resource: arn:aws:s3:::${self:provider.environment.IMAGES_S3_BUCKET}/* 
+    
+    - Effect: Allow
+      Action:
+        ...
+        - xray:PutTraceSegments
+        - xray:PutTelemetryRecords
+      Resource: "*"
+
+    - Effect: Allow
+        Action:
+          - dynamodb:GetItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
 
 functions:
 
