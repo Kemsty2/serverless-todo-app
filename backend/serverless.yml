@@ -56,10 +56,14 @@ provider:
       Resource: arn:aws:s3:::${self:provider.environment.IMAGES_S3_BUCKET}/* 
     
     - Effect: Allow
-      Action:
-        ...
+      Action:        
         - xray:PutTraceSegments
         - xray:PutTelemetryRecords
+        - xray:PutTraceSegments
+        - xray:PutTelemetryRecords
+        - xray:GetSamplingRules
+        - xray:GetSamplingTargets
+        - xray:GetSamplingStatisticSummaries        
       Resource: "*"
 
     - Effect: Allow
