@@ -13,7 +13,18 @@ import { createLogger } from '../../utils/logger'
 
 const logger = createLogger('createTodo')
 
-export const handler = middy(async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+export const handler = middy(async (event: APIGatewayProxyEvent, context): Promise<APIGatewayProxyResult> => {
+
+  if (context.custom.source === 'serverless-plugin-warmup') {
+    console.log('WarmUp - Lambda is warm!')
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        message: 'Warm Hello World!'
+      })
+    }
+  }
+
   const newTodo: CreateTodoRequest = JSON.parse(event.body)
 
   // TODO: Implement creating a new TODO item

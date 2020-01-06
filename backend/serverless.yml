@@ -21,6 +21,7 @@ plugins:
   - serverless-iam-roles-per-function
   - serverless-reqvalidator-plugin
   - serverless-aws-documentation
+  - serverless-plugin-warmup
 
 #package:
 #  individually: true
@@ -55,6 +56,28 @@ provider:
         - s3:GetObject
       Resource: arn:aws:s3:::${self:provider.environment.IMAGES_S3_BUCKET}/*             
 
+    - Effect: Allow
+      Action:        
+        - "xray:PutTraceSegments"                
+        - "xray:PutTelemetryRecords"             
+      Resource: "*"
+    
+    - Effect: Allow
+      Action:
+        - dynamodb:GetItem
+      Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+    
+    - Effect: 'Allow'
+      Action:
+        - 'lambda:InvokeFunction'
+      Resource:
+      - Fn::Join:
+        - ':'
+        - - arn:aws:lambda
+          - Ref: AWS::Region
+          - Ref: AWS::AccountId
+          - function:${self:service.name}-${self:provider.stage}-*
+
 functions:
 
   Auth:
@@ -62,7 +85,10 @@ functions:
 
   # TODO: Configure this function
   GetTodos:
-    handler: src/lambda/index.getTodos    
+    handler: src/lambda/index.getTodos   
+    warmup:
+      enabled: true            
+    iamRoleStatementsInherit: true 
     events:
       - http:
           method: get
@@ -78,18 +104,15 @@ functions:
       - Effect: Allow
         Action:
           - dynamodb:Query
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}/index/${self:provider.environment.INDEX_NAME}
-      
-      - Effect: Allow
-        Action:        
-          - "xray:PutTraceSegments"                
-          - "xray:PutTelemetryRecords"             
-        Resource: "*"
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}/index/${self:provider.environment.INDEX_NAME}            
       
 
   # TODO: Configure this function  
   CreateTodo:
-    handler: src/lambda/index.createTodo    
+    handler: src/lambda/index.createTodo   
+    warmup:
+      enabled: true 
+    iamRoleStatementsInherit: true
     events:
       - http:
           method: post
@@ -106,17 +129,14 @@ functions:
       - Effect: Allow
         Action:
           - dynamodb:PutItem
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}     
-      
-      - Effect: Allow
-        Action:        
-          - "xray:PutTraceSegments"                
-          - "xray:PutTelemetryRecords"             
-        Resource: "*"
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}               
 
   # TODO: Configure this function
   UpdateTodo:
     handler: src/lambda/index.updateTodo    
+    warmup:
+      enabled: true
+    iamRoleStatementsInherit: true
     events:
       - http:
           method: patch
@@ -131,20 +151,14 @@ functions:
               'application/json': UpdateTodoRequest
     iamRoleStatements:
       - Effect: Allow
-        Action:
-          - dynamodb:GetItem
+        Action:          
           - dynamodb:UpdateItem
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
-      
-      - Effect: Allow
-        Action:        
-          - "xray:PutTraceSegments"                
-          - "xray:PutTelemetryRecords"             
-        Resource: "*"
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}            
 
   # TODO: Configure this function
   DeleteTodo:
     handler: src/lambda/index.deleteTodo    
+    iamRoleStatementsInherit: true
     events:
       - http:
           method: delete
@@ -153,36 +167,21 @@ functions:
           cors: true
     iamRoleStatements:
       - Effect: Allow
-        Action:
-          - dynamodb:GetItem
+        Action:          
           - dynamodb:DeleteItem
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
-      
-      - Effect: Allow
-        Action:        
-          - "xray:PutTraceSegments"                
-          - "xray:PutTelemetryRecords"             
-        Resource: "*"
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}         
 
   # TODO: Configure this function
   GenerateUploadUrl:
     handler: src/lambda/index.generateUploadUrl
+    iamRoleStatementsInherit: true
     events:
       - http:
           method: post
           path: todos/{todoId}/attachment
           authorizer: Auth
           cors: true
-    iamRoleStatements:
-      - Effect: Allow
-        Action:        
-          - "xray:PutTraceSegments"                
-          - "xray:PutTelemetryRecords"             
-        Resource: "*"
-      - Effect: Allow
-        Action:
-          - dynamodb:GetItem
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+      
 
 resources:
   Resources:
