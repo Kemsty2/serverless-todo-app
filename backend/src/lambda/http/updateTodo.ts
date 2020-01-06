@@ -13,7 +13,7 @@ import { createLogger } from '../../utils/logger'
 
 import * as warmer from 'lambda-warmer'
 
-const logger = createLogger('createTodo')
+const logger = createLogger('updateTodo')
 
 export const handler = middy(async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
 

@@ -7,7 +7,6 @@ before_install:
 - serverless config credentials --provider aws --key ${AWS_ACCESS_KEY_ID} --secret ${AWS_SECRET_KEY}
 
 stages:
-- Testing
 - name: Deploy Dev
   if: branch = dev
 - name: Deploy Prod
@@ -15,10 +14,6 @@ stages:
 
 jobs: 
   include:
-    - stage: Testing
-      script:
-      - echo "Running some test"
-      - serverless version
     - stage:  Deploy Dev
       script: ./backend/deploy-dev.sh
     - stage:  Deploy Prod
