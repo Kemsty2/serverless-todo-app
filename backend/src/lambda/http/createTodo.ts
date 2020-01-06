@@ -9,14 +9,19 @@ import { CreateTodoRequest } from '../../requests/CreateTodoRequest'
 import { createTodo } from '../../businessLogic/todos'
 import { getJwtToken } from '../utils'
 
+import { createLogger } from '../../utils/logger'
+
+const logger = createLogger('createTodo')
+
 export const handler = middy(async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   const newTodo: CreateTodoRequest = JSON.parse(event.body)
 
   // TODO: Implement creating a new TODO item
   const jwtToken = getJwtToken(event)
-  
-  const newItem = await createTodo(newTodo, jwtToken)
+  logger.info('Getting Jwt Token', jwtToken)
 
+  const newItem = await createTodo(newTodo, jwtToken)
+  logger.info('Todo Item was Created', newItem)
   return {
     statusCode: 201,    
     body: JSON.stringify({

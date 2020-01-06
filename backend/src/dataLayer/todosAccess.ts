@@ -1,17 +1,20 @@
-import * as AWS  from 'aws-sdk'
-//  import * as AWSXRay from 'aws-xray-sdk'
 import { DocumentClient } from 'aws-sdk/clients/dynamodb'
-
-//  const XAWS = AWSXRay.captureAWS(AWS)
-
 import { TodoItem } from '../models/TodoItem'
 import { TodoUpdate } from '../models/TodoUpdate'
 
+const AWSXray = require('aws-xray-sdk');
+const AWS = require('aws-sdk');
+
+const client = new AWS.DynamoDB.DocumentClient({
+  service: new AWS.DynamoDB()
+});
+
+AWSXray.captureAWSClient(client.service);
 
 export class TodosAccess {
 
   constructor(
-    private readonly docClient: DocumentClient = createDynamoDBClient(),
+    private readonly docClient: DocumentClient = client,
     private readonly todosTable = process.env.TODOS_TABLE,
     private readonly indexTodosTable = process.env.INDEX_NAME) {
   }
@@ -43,7 +46,21 @@ export class TodosAccess {
     return todoItem
   }
 
-  async updateTodo(todoToUpdate: TodoUpdate, userId: string, todoId: string): Promise<void> {
+  async getTodoById(userId:string, todoId: string):  Promise<TodoItem>{
+
+    const key = {
+      "userId": userId,
+      "todoId": todoId
+    }
+    const result = await this.docClient.get({
+      TableName: this.todosTable,
+      Key: key
+    }).promise()
+
+    return result.Item as TodoItem
+  }
+
+  async updateTodo(todoToUpdate: TodoUpdate, userId: string, todoId: string): Promise<void> {    
 
     const params = {
       TableName: this.todosTable,
@@ -51,11 +68,16 @@ export class TodosAccess {
         "userId": userId,
         "todoId": todoId
       },
-      UpdateExpression: "set name =:name, dueDate = :dueDate, done = :done",
+      UpdateExpression: "set #n =:name, #dD = :dueDate, #d = :done",
       ExpressionAttributeValues: {
         ":name": todoToUpdate.name,
         ":dueDate": todoToUpdate.dueDate,
         ":done": todoToUpdate.done
+      },
+      ExpressionAttributeNames: {
+        "#n": "name",
+        "#dD": "dueDate",
+        "#d": "done"
       },
       ReturnValues: "NONE"
     }
@@ -72,11 +94,7 @@ export class TodosAccess {
     await this.docClient.delete({
       TableName: this.todosTable,
       Key: key
-    }).promise()
-    
+    }).promise()    
   }
 }
 
-function createDynamoDBClient() { 
-    return new AWS.DynamoDB.DocumentClient()
-}

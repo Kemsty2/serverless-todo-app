@@ -13,6 +13,12 @@ export async function getAllTodos(jwtToken: string): Promise<TodoItem[]> {
   return todoAccess.getAllTodos(userId)
 }
 
+export async function getTodoById(jwtToken: string, todoId: string): Promise<TodoItem>{
+  const userId = parseUserId(jwtToken)
+
+  return todoAccess.getTodoById(userId, todoId)
+}
+
 export async function createTodo(
   CreateTodoRequest: CreateTodoRequest,
   jwtToken: string
