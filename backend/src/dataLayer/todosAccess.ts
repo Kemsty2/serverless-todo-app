@@ -1,16 +1,20 @@
-import {captureAWS} from 'aws-xray-sdk'
 import { DocumentClient } from 'aws-sdk/clients/dynamodb'
-
-const XAWS = captureAWS(require('aws-sdk'))
-
 import { TodoItem } from '../models/TodoItem'
 import { TodoUpdate } from '../models/TodoUpdate'
 
+const AWSXray = require('aws-xray-sdk');
+const AWS = require('aws-sdk');
+
+const client = new AWS.DynamoDB.DocumentClient({
+  service: new AWS.DynamoDB()
+});
+
+AWSXray.captureAWSClient(client.service);
 
 export class TodosAccess {
 
   constructor(
-    private readonly docClient: DocumentClient = createDynamoDBClient(),
+    private readonly docClient: DocumentClient = client,
     private readonly todosTable = process.env.TODOS_TABLE,
     private readonly indexTodosTable = process.env.INDEX_NAME) {
   }
@@ -94,6 +98,3 @@ export class TodosAccess {
   }
 }
 
-function createDynamoDBClient() {   
-    return new XAWS.DynamoDB.DocumentClient()
-}
