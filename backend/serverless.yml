@@ -85,7 +85,7 @@ functions:
           method: post
           path: todos
           cors: true
-          authorizerr: Auth
+          authorizer: Auth
           reqValidatorName: RequestBodyValidator
           documentation:
             summary: Create a new todo item
