@@ -8,10 +8,10 @@ before_install:
 
 stages:
 - Testing
-#- name: Deploy Dev
-#  if: branch = dev
-#- name: Deploy Prod
-#  if: branch = master
+- name: Deploy Dev
+  if: branch = dev
+- name: Deploy Prod
+  if: branch = master
 
 jobs: 
   include:
@@ -19,7 +19,7 @@ jobs:
       script:
       - echo "Running some test"
       - serverless version
-    #- stage:  Deploy Dev
-    #  script: ./backend/deploy-dev.sh
-    #- stage:  Deploy Prod
-    #  script: ./backend/deploy-prod.sh
+    - stage:  Deploy Dev
+      script: ./backend/deploy-dev.sh
+    - stage:  Deploy Prod
+      script: ./backend/deploy-prod.sh
