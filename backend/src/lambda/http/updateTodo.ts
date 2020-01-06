@@ -11,11 +11,13 @@ import { getJwtToken, todoExists } from '../utils'
 
 import { createLogger } from '../../utils/logger'
 
+import * as warmer from 'lambda-warmer'
+
 const logger = createLogger('createTodo')
 
-export const handler = middy(async (event: APIGatewayProxyEvent, context): Promise<APIGatewayProxyResult> => {
+export const handler = middy(async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
 
-  if (context.custom.source === 'serverless-plugin-warmup') {
+  if (await warmer(event)) {
     console.log('WarmUp - Lambda is warm!')
     return {
       statusCode: 200,

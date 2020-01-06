@@ -6,14 +6,15 @@ import { getAllTodos } from '../../businessLogic/todos'
 import * as middy from 'middy'
 import { cors } from 'middy/middlewares'
 import { getJwtToken } from '../utils'
+import * as warmer from 'lambda-warmer'
 
 import { createLogger } from '../../utils/logger'
 
 const logger = createLogger('getTodo')
 
-export const handler = middy(async (event: APIGatewayProxyEvent, context): Promise<APIGatewayProxyResult> => {
+export const handler = middy(async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
 
-  if (context.custom.source === 'serverless-plugin-warmup') {
+  if (await warmer(event)) {
     console.log('WarmUp - Lambda is warm!')
     return {
       statusCode: 200,

@@ -12,6 +12,7 @@
     "dateformat": "^3.0.3",
     "http-errors": "^1.7.2",
     "jsonwebtoken": "^8.5.1",
+    "lambda-warmer": "^1.2.1",
     "middy": "^0.25.0",
     "source-map-support": "^0.5.11",
     "uuid": "^3.3.2",

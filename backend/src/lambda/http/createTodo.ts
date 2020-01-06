@@ -8,14 +8,15 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import { CreateTodoRequest } from '../../requests/CreateTodoRequest'
 import { createTodo } from '../../businessLogic/todos'
 import { getJwtToken } from '../utils'
+import * as warmer from 'lambda-warmer'
 
 import { createLogger } from '../../utils/logger'
 
 const logger = createLogger('createTodo')
 
-export const handler = middy(async (event: APIGatewayProxyEvent, context): Promise<APIGatewayProxyResult> => {
-
-  if (context.custom.source === 'serverless-plugin-warmup') {
+export const handler = middy(async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {  
+  
+  if (await warmer(event)) {
     console.log('WarmUp - Lambda is warm!')
     return {
       statusCode: 200,
