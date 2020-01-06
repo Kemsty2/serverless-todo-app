@@ -53,16 +53,7 @@ provider:
       Action:
         - s3:PutObject
         - s3:GetObject
-      Resource: arn:aws:s3:::${self:provider.environment.IMAGES_S3_BUCKET}/* 
-    
-    - Effect: Allow
-      Action:        
-        - "xray:PutTraceSegments"                
-        - "xray:PutTelemetryRecords"
-        - "xray:GetSamplingRules"
-        - "xray:GetSamplingTargets"
-        - "xray:GetSamplingStatisticSummaries"        
-      Resource: "*"
+      Resource: arn:aws:s3:::${self:provider.environment.IMAGES_S3_BUCKET}/*         
 
     - Effect: Allow
       Action:
