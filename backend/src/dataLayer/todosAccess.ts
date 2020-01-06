@@ -57,7 +57,7 @@ export class TodosAccess {
         ":dueDate": todoToUpdate.dueDate,
         ":done": todoToUpdate.done
       },
-      ExpressionAttributeNames={
+      ExpressionAttributeNames: {
         "#n": "name",
         "#dD": "dueDate",
         "#d": "done"
