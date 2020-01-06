@@ -61,7 +61,7 @@ export class TodosAccess {
         "#n": "name",
         "#dD": "dueDate",
         "#d": "done"
-      }
+      },
       ReturnValues: "NONE"
     }
 
