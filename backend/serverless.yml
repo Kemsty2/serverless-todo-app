@@ -23,7 +23,7 @@ plugins:
   - serverless-aws-documentation
   - serverless-plugin-warmup
 
-"package:
+#"package:
 #  individually: true
 
 provider:
