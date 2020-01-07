@@ -61,7 +61,7 @@ export class TodosAccess {
     return result.Item as TodoItem
   }
 
-  async updateTodo(todoToUpdate: TodoUpdate, userId: string, todoId: string, attachmentUrl?: string): Promise<void> {    
+  async updateTodo(todoToUpdate: TodoUpdate, userId: string, todoId: string): Promise<void> {    
 
     const params = {
       TableName: this.todosTable,
@@ -69,18 +69,16 @@ export class TodosAccess {
         "userId": userId,
         "todoId": todoId
       },
-      UpdateExpression: "set #n =:name, #dD = :dueDate, #d = :done, #at = :attachmentUrl",
+      UpdateExpression: "set #n =:name, #dD = :dueDate, #d = :done",
       ExpressionAttributeValues: {
         ":name": todoToUpdate.name,
         ":dueDate": todoToUpdate.dueDate,
-        ":done": todoToUpdate.done,
-        ":attachmentUrl": attachmentUrl
+        ":done": todoToUpdate.done,        
       },
       ExpressionAttributeNames: {
         "#n": "name",
         "#dD": "dueDate",
-        "#d": "done",
-        "#at": "attachmentUrl"
+        "#d": "done",        
       },
       ReturnValues: "NONE"
     }
