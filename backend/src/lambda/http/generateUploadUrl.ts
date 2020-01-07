@@ -3,7 +3,7 @@ import 'source-map-support/register'
 import * as AWS from 'aws-sdk'
 import * as AWSXray from 'aws-xray-sdk'
 
-const bucketName = process.env.IMAGES_S3_BUCKET
+const bucketName = process.env.IMAGE_S3_BUCKET
 const urlExpiration = process.env.SIGNED_URL_EXPIRATION
 
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
@@ -11,6 +11,7 @@ import { cors } from 'middy/middlewares'
 import * as middy from 'middy'
 import { getJwtToken, todoExists } from '../utils'
 import { createLogger } from '../../utils/logger'
+import { updateTodoAttachment } from '../../businessLogic/todos'
 
 const XAWS = AWSXray.captureAWS(AWS)
 
@@ -39,7 +40,10 @@ export const handler = middy(async (event: APIGatewayProxyEvent): Promise<APIGat
   }
 
   const uploadUrl = getUploadUrl(todoId)
+  const attachmentUrl = `https://${bucketName}.s3.amazonaws.com/${todoId}`
+  
   logger.info('Presigned url was generated', uploadUrl)
+  await updateTodoAttachment(todoId, jwtToken, attachmentUrl)
   return {
     statusCode: 200,
     body: JSON.stringify({
@@ -52,7 +56,7 @@ function getUploadUrl(todoId: string) {
   return s3.getSignedUrl('putObject', {
     Bucket: bucketName,
     Key: todoId,
-    Expires: parseInt(urlExpiration)
+    Expires: urlExpiration
   })
 }
 
