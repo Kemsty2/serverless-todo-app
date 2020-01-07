@@ -4,7 +4,7 @@ set -ev
 
 cd "$PWD"/backend
 
-echo "Install Dependencies"
+echo "Install All Dependencies"
 npm ci
 
 echo "Set Max Garbage Heap of Node to 1024"
