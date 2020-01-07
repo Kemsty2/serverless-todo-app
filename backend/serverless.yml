@@ -1,5 +1,5 @@
 service:
-  name: serverless-todo-app
+  name: serverless-todo-application
 
 custom:  
   documentation:
