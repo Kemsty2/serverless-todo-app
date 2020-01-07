@@ -6,7 +6,7 @@ custom:
     api:
       info:
         version: v1.0.0
-        title: Todo Api
+        title: Todo Rest Api
         description: Serverless application for Todo App
     models:
       - name: CreateTodoRequest
