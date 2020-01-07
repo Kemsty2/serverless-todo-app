@@ -3,7 +3,7 @@ import 'source-map-support/register'
 import * as AWS from 'aws-sdk'
 import * as AWSXray from 'aws-xray-sdk'
 
-const bucketName = process.env.IMAGE_S3_BUCKET
+const bucketName = process.env.IMAGES_S3_BUCKET
 const urlExpiration = parseInt(process.env.SIGNED_URL_EXPIRATION)
 
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
