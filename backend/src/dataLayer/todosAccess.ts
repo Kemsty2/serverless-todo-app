@@ -12,6 +12,7 @@ const client = new AWS.DynamoDB.DocumentClient({
 AWSXray.captureAWSClient(client.service);
 
 export class TodosAccess {
+  [x: string]: any;
 
   constructor(
     private readonly docClient: DocumentClient = client,
@@ -60,7 +61,7 @@ export class TodosAccess {
     return result.Item as TodoItem
   }
 
-  async updateTodo(todoToUpdate: TodoUpdate, userId: string, todoId: string): Promise<void> {    
+  async updateTodo(todoToUpdate: TodoUpdate, userId: string, todoId: string, attachmentUrl?: string): Promise<void> {    
 
     const params = {
       TableName: this.todosTable,
@@ -68,16 +69,40 @@ export class TodosAccess {
         "userId": userId,
         "todoId": todoId
       },
-      UpdateExpression: "set #n =:name, #dD = :dueDate, #d = :done",
+      UpdateExpression: "set #n =:name, #dD = :dueDate, #d = :done, #at = :attachmentUrl",
       ExpressionAttributeValues: {
         ":name": todoToUpdate.name,
         ":dueDate": todoToUpdate.dueDate,
-        ":done": todoToUpdate.done
+        ":done": todoToUpdate.done,
+        ":attachmentUrl": attachmentUrl
       },
       ExpressionAttributeNames: {
         "#n": "name",
         "#dD": "dueDate",
-        "#d": "done"
+        "#d": "done",
+        "#at": "attachmentUrl"
+      },
+      ReturnValues: "NONE"
+    }
+
+    await this.docClient.update(params).promise()
+        
+  }
+
+  async updateTodoAttachment(userId: string, todoId: string, attachmentUrl?: string): Promise<void> {    
+
+    const params = {
+      TableName: this.todosTable,
+      Key: {
+        "userId": userId,
+        "todoId": todoId
+      },
+      UpdateExpression: "set #at = :attachmentUrl",
+      ExpressionAttributeValues: {        
+        ":attachmentUrl": attachmentUrl
+      },
+      ExpressionAttributeNames: {        
+        "#at": "attachmentUrl"
       },
       ReturnValues: "NONE"
     }
