@@ -4,7 +4,7 @@ import * as AWS from 'aws-sdk'
 import * as AWSXray from 'aws-xray-sdk'
 
 const bucketName = process.env.IMAGE_S3_BUCKET
-const urlExpiration = process.env.SIGNED_URL_EXPIRATION
+const urlExpiration = parseInt(process.env.SIGNED_URL_EXPIRATION)
 
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import { cors } from 'middy/middlewares'
