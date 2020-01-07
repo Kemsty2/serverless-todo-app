@@ -23,8 +23,8 @@ plugins:
   - serverless-aws-documentation
   - serverless-plugin-warmup
 
-package:
-  individually: true
+#package:
+#  individually: true
 
 provider:
   name: aws
