@@ -30,9 +30,9 @@
     "serverless-plugin-warmup": "^4.7.1-rc.1",
     "serverless-reqvalidator-plugin": "^1.0.3",
     "serverless-webpack": "^5.3.1",
-    "ts-loader": "^5.4.5",
+    "ts-loader": "^9.4.2",
     "typescript": "^3.5.3",
-    "webpack": "^4.35.3"
+    "webpack": "^5.75.0"
   },
   "author": "King Kemsty",
   "license": "MIT"
